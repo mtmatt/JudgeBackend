@@ -4,6 +4,7 @@ import session from 'express-session'
 import passport from 'passport'
 import MongoStore from 'connect-mongo'
 import mongoose from 'mongoose'
+import usersRouter from './routes/users.mjs'
 
 export const createApp = () => {
     mongoose.connect('mongodb://localhost/judge')
@@ -31,5 +32,6 @@ export const createApp = () => {
     app.use(passport.session())
 
     // Place to put custom routes
+    app.use(usersRouter)
     return app
 }
