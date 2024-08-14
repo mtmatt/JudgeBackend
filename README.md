@@ -25,13 +25,47 @@ Structure of different types of data.
 {
     "_id": String,
     "displayID": String,
+    "title": String,
     "description": String,
-    "input": String,
-    "output": String,
-    "testcases": [{
-        "input": String,
-        "output": String,
-    }]
+    "inputFormat": String,
+    "outputFormat": String,
+    "timeLimit": Number,
+    "memoryLimit": Number,
+    "scorePolicy": String,
+    "testcases": [
+        {
+            "input": String,
+            "output": String,
+            "point": Number,
+            "subtask": String
+        }
+    ]
+}
+```
+
+### Submission
+
+```json
+{
+    "_id": String,
+    "when": String,
+    "status": String,
+    "language": String,
+    "username": String,
+    "problemId": String,
+    "result": {
+        "type": String,
+        "maxTime": Number,
+        "maxMemory": Number,
+        "individual": [
+            {
+                "type": String,
+                "time": Number,
+                "memory": Number
+            }
+        ]
+    },
+    
 }
 ```
 
