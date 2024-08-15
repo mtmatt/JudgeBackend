@@ -22,7 +22,7 @@ export const createProblemValidation = {
                 max: 32,
             },
             errorMessage:
-                'Length of title must between 2 to 32 characters',
+                'Length of title must between 4 to 32 characters',
         },
         notEmpty: {
             errorMessage: 'Title should not be empty',
