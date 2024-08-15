@@ -22,8 +22,8 @@ usersRouter.get(
         const { query: { filter, value } } = request
         const result = validationResult(request)
         if (!filter && !value) {
-            const user = await User.find().select('id username displayName').sort({ id: -1 })
-            return response.status(200).send(user)
+            const users = await User.find().select('id username displayName').sort({ id: -1 })
+            return response.status(200).send(users)
         }
         if (!result.isEmpty()) {
             console.log(result.array())
