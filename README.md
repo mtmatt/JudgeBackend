@@ -6,7 +6,7 @@ Structure of different types of data.
 
 ### User
 
-```json
+```js
 {
     "_id": String,
     "username": String,
@@ -21,7 +21,7 @@ Structure of different types of data.
 
 ### Problem
 
-```json
+```js
 {
     "_id": String,
     "displayID": String,
@@ -46,7 +46,7 @@ Structure of different types of data.
 
 ### Submission
 
-```json
+```js
 {
     "_id": String,
     "createdTime": Date,
