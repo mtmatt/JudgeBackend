@@ -1,7 +1,7 @@
-import { Router } from "express"
-import { query, validationResult, matchedData, checkSchema } from "express-validator"
-import { User } from "../mongoose/schemas/users.mjs"
-import { createUserValidation } from '../utils/create-user-validation.mjs'
+import { Router } from 'express'
+import { query, validationResult, matchedData, checkSchema } from 'express-validator'
+import { User } from '../mongoose/schemas/users.mjs'
+import { createUserValidation } from '../validations/create-user-validation.mjs'
 import { hashString } from '../utils/hash-password.mjs'
 
 const usersRouter = Router()

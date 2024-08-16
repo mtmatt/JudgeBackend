@@ -1,7 +1,7 @@
-import { Router } from "express"
-import { query, validationResult, matchedData, checkSchema, check } from "express-validator"
-import { Problem } from "../mongoose/schemas/problems.mjs"
-import { createProblemValidation } from "../utils/create-problem-validation.mjs"
+import { Router } from 'express'
+import { query, validationResult, matchedData, checkSchema, check } from 'express-validator'
+import { Problem } from '../mongoose/schemas/problems.mjs'
+import { createProblemValidation } from '../validations/create-problem-validation.mjs'
 
 const problemsRouter = Router()
 
