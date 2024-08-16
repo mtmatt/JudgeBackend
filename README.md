@@ -85,3 +85,6 @@ Structure of different types of data.
 - Problems
     - GET /api/problems
     - POST /api/problems
+- Submissions
+    - GET /api/submissions
+    - POST /api/submissions
