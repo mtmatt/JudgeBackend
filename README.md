@@ -25,6 +25,7 @@ Structure of different types of data.
 {
     "_id": String,
     "displayID": String,
+    "createdTime": Date,
     "title": String,
     "description": String,
     "inputFormat": String,
@@ -48,11 +49,19 @@ Structure of different types of data.
 ```json
 {
     "_id": String,
-    "when": String,
+    "createdTime": Date,
     "status": String,
     "language": String,
     "username": String,
-    "problemId": String,
+    "problemID": String,
+    "compileCommand": String,
+    "executeCommand": String,
+    "userSolution": [
+        {
+            "filename": String,
+            "content": String
+        }
+    ],
     "result": {
         "type": String,
         "maxTime": Number,
@@ -64,8 +73,7 @@ Structure of different types of data.
                 "memory": Number
             }
         ]
-    },
-    
+    }
 }
 ```
 
