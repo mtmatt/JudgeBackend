@@ -86,3 +86,6 @@ Structure of different types of data.
 - Submissions
     - GET /api/submissions
     - POST /api/submissions
+- Authentication
+    - GET /api/auth/status
+    - POST /api/auth
