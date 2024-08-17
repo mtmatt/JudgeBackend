@@ -61,12 +61,12 @@ Structure of different types of data.
         }
     ],
     "result": {
-        "type": String,
+        "status": String,
         "maxTime": Number,
         "maxMemory": Number,
         "individual": [
             {
-                "type": String,
+                "status": String,
                 "time": Number,
                 "memory": Number
             }
