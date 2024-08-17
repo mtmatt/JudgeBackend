@@ -6,6 +6,7 @@ import MongoStore from 'connect-mongo'
 import mongoose from 'mongoose'
 import usersRouter from './routes/users.mjs'
 import problemsRouter from './routes/problems.mjs'
+import submissionRouter from './routes/submission.mjs'
 
 export const createApp = () => {
     mongoose.connect('mongodb://localhost/judge')
@@ -35,5 +36,6 @@ export const createApp = () => {
     // Place to put custom routes
     app.use(usersRouter)
     app.use(problemsRouter)
+    app.use(submissionRouter)
     return app
 }
