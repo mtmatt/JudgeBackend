@@ -21,14 +21,6 @@ const submissionSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.String,
         require: true,
     },
-    compileCommand: {
-        type: mongoose.Schema.Types.String,
-        require: true,
-    },
-    executeCommand: {
-        type: mongoose.Schema.Types.String,
-        require: true,
-    },
     userSolution: {
         type: mongoose.Schema.Types.Array,
         require: true,

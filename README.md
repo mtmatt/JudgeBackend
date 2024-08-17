@@ -54,8 +54,6 @@ Structure of different types of data.
     "language": String,
     "username": String,
     "problemID": String,
-    "compileCommand": String,
-    "executeCommand": String,
     "userSolution": [
         {
             "filename": String,
