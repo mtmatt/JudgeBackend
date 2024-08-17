@@ -32,7 +32,7 @@ problemsRouter.post('/api/problems',
         try {
             newProblem.createdTime = Date.now()
             const savedProblem = await newProblem.save()
-            return response.status(201).send(newProblem)
+            return response.status(201).send(savedProblem)
         }
         catch (error) {
             console.log(`Error: ${error}`)
