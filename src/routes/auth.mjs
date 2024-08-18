@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import passport from 'passport'
 import '../strategies/local-strategies.mjs'
-// import googleStrategies from '../strategies/google-strategies.mjs'
+import googleStrategies from '../strategies/google-strategies.mjs'
 
 const authRouter = Router()
 
@@ -30,14 +30,14 @@ authRouter.post('/api/auth/logout', (request, response) => {
     })
 })
 
-// authRouter.get('/api/auth/google', passport.authenticate('google', {
-//     scope: ['email', 'profile']
-// }))
+authRouter.get('/api/auth/google', passport.authenticate('google', {
+    scope: ['email', 'profile']
+}))
 
-// authRouter.get('/api/auth/google/callback', passport.authenticate('google'), (request, response) => {
-//     return request.user
-//         ? response.status(201).send(request.user)
-//         : response.sendStatus(401)
-// })
+authRouter.get('/api/auth/google/callback', passport.authenticate('google'), (request, response) => {
+    return request.user
+        ? response.status(201).send(request.user)
+        : response.sendStatus(401)
+})
 
 export default authRouter

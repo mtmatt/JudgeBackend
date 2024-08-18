@@ -29,7 +29,10 @@ const userSchema = new mongoose.Schema({
     rating: {
         type: mongoose.Schema.Types.Number,
         required: true,
-    }
+    },
+    googleID: {
+        type: mongoose.Schema.Types.String,
+    },
 })
 
 export const User = mongoose.model('User', userSchema)
