@@ -1,4 +1,4 @@
-import crypto, { hash, scryptSync, randomBytes } from 'crypto'
+import crypto, { scryptSync, randomBytes } from 'crypto'
 import FileSystem from 'fs'
 
 export const randomString = (size) => {
