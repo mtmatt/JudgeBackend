@@ -4,6 +4,7 @@ import { sleep } from './sleep.mjs'
 import util from 'util'
 import child_process from 'child_process'
 import FileSystem from 'fs'
+import languageSupport from './language-support.mjs'
 
 const aexec = util.promisify(child_process.exec);
 
@@ -12,7 +13,7 @@ const compile = async (submission) => {
     for (let i = 0; i < userSolution.length; ++i) {
         FileSystem.writeFileSync('./user-solutions/' + userSolution[i].filename, userSolution[i].content)
     }
-    const compileResult = await aexec('gcc ./user-solutions/main.c -O2 -o ./user-solutions/main')
+    const compileResult = await aexec('gcc -std=c11 ./user-solutions/main.c -o ./user-solutions/main')
     if (compileResult.error) {
         console.log(compileResult.error)
         await Submission.findByIdAndUpdate(submission.id, { status: 'CE' })
@@ -22,9 +23,11 @@ const compile = async (submission) => {
 }
 
 const runSandbox = async (submission) => {
-    const sandbox = await aexec('isolate --run -i input -o output --mem=262144 --time=1 --meta=user-solutions/meta.out -- main')
+    const sandbox = await aexec(
+        'isolate --run -E PATH=$PATH -i input -o output --mem=262144 --time=1 --meta=user-solutions/meta.out ' + 
+        '-- /bin/bash ./execute')
     if (sandbox.error) {
-        console.log(sandbox.error)
+        console.log(sandbox.stderr, sandbox.error)
         submission.result.individual[i].status = 'RE'
         await Submission.findByIdAndUpdate(submission.id, submission)
         return false
@@ -43,22 +46,38 @@ const getMeta = () => {
     return parsedMeta
 }
 
+const moveFiles = async (submission, isolateFolder) => {
+    const { compileCommand, executeCommand } = languageSupport[submission.language]
+    if (compileCommand === '') {
+        for (let i = 0; i < submission.userSolution.length; ++i) {
+            await aexec(
+                'cp ./user-solutions/' + submission.userSolution[i].filename + 
+                ' ' + isolateFolder)
+        }
+    }
+    FileSystem.writeFileSync(isolateFolder + 'execute', '#!/bin bash\n' + executeCommand)
+    FileSystem.chmodSync(isolateFolder + 'execute', '755')
+    await aexec('mv ./user-solutions/main ' + isolateFolder + 'main')
+}
+
 const run = async (submission, isolateFolder) => {
     const problem = await Problem.findOne({ displayID: submission.problemID })
     let status = 'AC'
     let point = 0
     for (let i = 0; i < problem.testcase.length; ++i) {
         FileSystem.writeFileSync(isolateFolder + 'input', problem.testcase[i].input)
-        await aexec('mv ./user-solutions/main ' + isolateFolder + 'main')
-        const meta = getMeta()
-        if (parseInt(meta['time-wall']) > problem.timeLimit) status = 'TLE'
-        submission.result.individual[i].time = parseInt(meta['time-wall'])
-        submission.result.individual[i].memory = parseInt(meta['max-rss'])
+        await moveFiles(submission, isolateFolder)
+        
         if (!await runSandbox(submission)) {
             submission.result.individual[i].status = 'RE'
             if (status !== 'TLE') status = 'RE'
             continue
         }
+        const meta = getMeta()
+        if (parseInt(meta['time-wall']) > problem.timeLimit) status = 'TLE'
+        submission.result.individual[i] = {}
+        submission.result.individual[i].time = parseInt(meta['time-wall'])
+        submission.result.individual[i].memory = parseInt(meta['max-rss'])
 
         const userOutput = FileSystem.readFileSync(isolateFolder + 'output').toString()
         const answer = problem.testcase[i].output
@@ -74,6 +93,7 @@ const run = async (submission, isolateFolder) => {
     }
     submission.status = status
     submission.result.status = point
+    await Submission.findByIdAndUpdate(submission.id, submission)
 }
 
 const judge = async (submission) => {
