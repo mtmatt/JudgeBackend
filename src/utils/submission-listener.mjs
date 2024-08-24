@@ -13,9 +13,11 @@ const compile = async (submission) => {
     for (let i = 0; i < userSolution.length; ++i) {
         FileSystem.writeFileSync('./user-solutions/' + userSolution[i].filename, userSolution[i].content)
     }
-    const compileResult = await aexec('gcc -std=c11 ./user-solutions/main.c -o ./user-solutions/main')
-    if (compileResult.error) {
-        console.log(compileResult.error)
+    try {
+        const compileResult = await aexec(languageSupport[submission.language].compileCommand)
+    }
+    catch (error) {
+        console.log(error)
         await Submission.findByIdAndUpdate(submission.id, { status: 'CE' })
         return false
     }
@@ -23,11 +25,13 @@ const compile = async (submission) => {
 }
 
 const runSandbox = async (submission) => {
-    const sandbox = await aexec(
-        'isolate --run -E PATH=$PATH -i input -o output --mem=262144 --time=1 --meta=user-solutions/meta.out ' + 
-        '-- /bin/bash ./execute')
-    if (sandbox.error) {
-        console.log(sandbox.stderr, sandbox.error)
+    try {
+        const sandbox = await aexec(
+            'isolate --run -E PATH=$PATH -i input -o output --mem=262144 --time=1 --meta=user-solutions/meta.out ' + 
+            '-- /bin/bash ./execute')
+    }
+    catch (error) {
+        console.log(error)
         submission.result.individual[i].status = 'RE'
         await Submission.findByIdAndUpdate(submission.id, submission)
         return false
