@@ -86,6 +86,10 @@ Structure of different types of data.
             GET /api/users?filter=username&value=matt 
             GET /api/users?filter=displayName&value=koc 
         ```
+    - GET /api/users/:username
+        ```
+        Get all field of single user with username.
+        ```
     - POST /api/users
         ```
         Add an user into database. The user information should be placed in request body.
@@ -98,10 +102,28 @@ Structure of different types of data.
             "isAdmin": true
         }
         ```
+    - DELETE /api/users/:username
+        ```
+        Delete the user with username.
+        ```
+    - PATCH /api/users/:username
+        ```
+        Update the user with data specified in request body.
+
+        Example:
+        request.body = {
+            "displayName": "mtmattqq",
+            "isAdmin": false,
+        }
+        ```
 - Problems
     - GET /api/problems
         ```
         Get all problems from database. 
+        ```
+    - GET /api/problems/:displayID
+        ```
+        Get all field of a problem with displayID.
         ```
     - POST /api/problems
         ```
@@ -125,6 +147,19 @@ Structure of different types of data.
                 "subtask": "0"
                 }
             ]
+        }
+        ```
+    - DELETE /api/problems/:displayID
+        ```
+        Delete the problem with displayID.
+        ```
+    - PATCH /api/problems/:displayID
+        ```
+        Update the problem with data specified in request body.
+
+        Example:
+        request.body = {
+            "title": "HelloWorld",
         }
         ```
 - Submissions
