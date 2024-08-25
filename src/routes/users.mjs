@@ -105,6 +105,9 @@ usersRouter.patch(
                     error: validationResult(request).array(),
                 }
             }
+            if (data.password) {
+                data.password = hashString(data.password)
+            }
             let user = await User.findOneAndUpdate({ username: username }, data)
             if (!user) {
                 return response.sendStatus(404);
