@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { query, validationResult, matchedData, checkSchema, check } from 'express-validator'
 import { Problem } from '../mongoose/schemas/problems.mjs'
 import { createProblemValidation } from '../validations/create-problem-validation.mjs'
+import { updateProblemValidation } from '../validations/update-problem-validation.mjs'
 
 const problemsRouter = Router()
 
@@ -17,6 +18,22 @@ problemsRouter.get('/api/problems', async (request, response) => {
         if (error) {
             return response.status(400).send(error)
         }
+    }
+})
+
+problemsRouter.get('/api/problems/:displayID', async (request, response) => {
+    const { displayID } = request.params
+    try {
+        const problem = await Problem
+            .findOne({ displayID: displayID })
+        if (!problem) {
+            return response.sendStatus(404)
+        }
+        return response.status(200).send(problem)
+    }
+    catch (error) {
+        console.log(error)
+        return response.status(400).send(error)
     }
 })
 
@@ -36,6 +53,50 @@ problemsRouter.post('/api/problems',
         }
         catch (error) {
             console.log(`Error: ${error}`)
+            return response.status(400).send(error)
+        }
+    }
+)
+
+problemsRouter.delete('/api/problems/:displayID', async (request, response) => {
+    const { displayID } = request.params
+    try {
+        const problem = await Problem
+            .findOneAndDelete({ displayID: displayID })
+        if (!problem) {
+            return response.sendStatus(404)
+        }
+        return response.status(200).send(problem)
+    }
+    catch (error) {
+        console.log(error)
+        return response.status(400).send(error)
+    }
+})
+
+problemsRouter.patch(
+    '/api/problems/:displayID',
+    checkSchema(updateProblemValidation), 
+    async (request, response) => {
+        const { displayID } = request.params
+        const data = matchedData(request)
+        console.log(data)
+        try {
+            if (Object.keys(data).length === 2) {
+                throw {
+                    message: 'No matched patch data',
+                    error: validationResult(request).array(),
+                }
+            }
+            let problem = await Problem.findOneAndUpdate({ displayID: displayID }, data)
+            if (!problem) {
+                return response.sendStatus(404);
+            }
+            problem = await Problem.findOne({ displayID: displayID }).select()
+            return response.status(201).send(problem)
+        }
+        catch (error) {
+            console.log(error)
             return response.status(400).send(error)
         }
     }
