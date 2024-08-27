@@ -6,6 +6,9 @@ import { createSubmissionValidation } from '../validations/create-submission-val
 const submissionRouter = Router()
 
 submissionRouter.get('/api/submissions', async (request, response) => {
+    if (!request.user) {
+        return response.status(401).send('Please login first')
+    }
     try {
         const submissions = await Submission
             .find()
@@ -23,6 +26,9 @@ submissionRouter.get('/api/submissions', async (request, response) => {
 submissionRouter.post('/api/submissions', 
     checkSchema(createSubmissionValidation), 
     async (request, response) => {
+        if (!request.user) {
+            return response.status(401).send('Please login first')
+        }
         const result = validationResult(request)
         if (!result.isEmpty()) {
             return response.status(400).send(result.array())

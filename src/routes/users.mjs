@@ -39,6 +39,9 @@ usersRouter.get(
 
 usersRouter.get('/api/users/:username', async (request, response) => {
     const { username } = request.params
+    if (!request.user) {
+        return response.status(401).send('Please login first')
+    }
     try {
         const user = await User.findOne({ username: username }).select()
         if (!user) {
@@ -56,11 +59,17 @@ usersRouter.post(
     '/api/users',
     checkSchema(createUserValidation),
     async (request, response) => {
+        if (!request.user) {
+            return response.status(401).send('Please login first')
+        }
         const result = validationResult(request)
         if (!result.isEmpty()) {
             return response.status(400).send(result.array())
         }
         const data = matchedData(request)
+        if (data.isAdmin && !request.user.isAdmin) {
+            return response.status(401).send('Please login as an admin first')
+        }
         const newUser = new User(data)
         try {
             newUser.password = hashString(newUser.password)
@@ -78,6 +87,9 @@ usersRouter.post(
 )
 
 usersRouter.delete('/api/users/:username', async (request, response) => {
+    if (!request.user || !request.user.isAdmin) {
+        return response.status(401).send('Please login as an admin first')
+    }
     const { username } = request.params
     try {
         const user = await User.findOneAndDelete({ username: username })
@@ -96,6 +108,9 @@ usersRouter.patch(
     '/api/users/:username', 
     checkSchema(updateUserValidation), 
     async (request, response) => {
+        if (!request.user) {
+            return response.status(401).send('Please login first')
+        }
         const { username } = request.params
         const data = matchedData(request)
         try {

@@ -22,6 +22,9 @@ problemsRouter.get('/api/problems', async (request, response) => {
 })
 
 problemsRouter.get('/api/problems/:displayID', async (request, response) => {
+    if (!request.user) {
+        return response.status(401).send('Please login first')
+    }
     const { displayID } = request.params
     try {
         const problem = await Problem
@@ -40,6 +43,9 @@ problemsRouter.get('/api/problems/:displayID', async (request, response) => {
 problemsRouter.post('/api/problems', 
     checkSchema(createProblemValidation), 
     async (request, response) => {
+        if (!request.user || !request.user.isAdmin) {
+            return response.status(401).send('Please login as an admin first')
+        }
         const result = validationResult(request)
         if (!result.isEmpty()) {
             return response.status(400).send(result.array())
@@ -59,6 +65,9 @@ problemsRouter.post('/api/problems',
 )
 
 problemsRouter.delete('/api/problems/:displayID', async (request, response) => {
+    if (!request.user || !request.user.isAdmin) {
+        return response.status(401).send('Please login as an admin first')
+    }
     const { displayID } = request.params
     try {
         const problem = await Problem
@@ -78,6 +87,9 @@ problemsRouter.patch(
     '/api/problems/:displayID',
     checkSchema(updateProblemValidation), 
     async (request, response) => {
+        if (!request.user) {
+            return response.status(401).send('Please login first')
+        }
         const { displayID } = request.params
         const data = matchedData(request)
         console.log(data)
