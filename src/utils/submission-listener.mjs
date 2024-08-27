@@ -24,15 +24,16 @@ const compile = async (submission) => {
     return true
 }
 
-const runSandbox = async (submission) => {
+const runSandbox = async (submission, testcase) => {
+    const { timeLimit, memoryLimit } = await Problem.findOne({ displayID: submission.problemID })
     try {
         const sandbox = await aexec(
-            'isolate --run -E PATH=$PATH -i input -o output --mem=262144 --time=1 --meta=user-solutions/meta.out ' + 
-            '-- /bin/bash ./execute')
+            `isolate --run -E PATH=$PATH -i input -o output --mem=${memoryLimit} --time=${timeLimit} --meta=user-solutions/meta.out ` + 
+            '-- main')
     }
     catch (error) {
         console.log(error)
-        submission.result.individual[i].status = 'RE'
+        submission.result.individual[testcase].status = 'RE'
         await Submission.findByIdAndUpdate(submission.id, submission)
         return false
     }
@@ -59,8 +60,9 @@ const moveFiles = async (submission, isolateFolder) => {
                 ' ' + isolateFolder)
         }
     }
-    FileSystem.writeFileSync(isolateFolder + 'execute', '#!/bin bash\n' + executeCommand)
-    FileSystem.chmodSync(isolateFolder + 'execute', '755')
+    // // This is for --cg mode
+    // FileSystem.writeFileSync(isolateFolder + 'execute', '#!/bin bash\n' + executeCommand)
+    // FileSystem.chmodSync(isolateFolder + 'execute', '755')
     await aexec('mv ./user-solutions/main ' + isolateFolder + 'main')
 }
 
@@ -72,7 +74,7 @@ const run = async (submission, isolateFolder) => {
         FileSystem.writeFileSync(isolateFolder + 'input', problem.testcase[i].input)
         await moveFiles(submission, isolateFolder)
         
-        if (!await runSandbox(submission)) {
+        if (!await runSandbox(submission, i)) {
             submission.result.individual[i].status = 'RE'
             if (status !== 'TLE') status = 'RE'
             continue
@@ -82,6 +84,8 @@ const run = async (submission, isolateFolder) => {
         submission.result.individual[i] = {}
         submission.result.individual[i].time = parseInt(meta['time-wall'])
         submission.result.individual[i].memory = parseInt(meta['max-rss'])
+        submission.result.maxTime = Math.max(submission.result.maxTime, submission.result.individual[i].time)
+        submission.result.maxMemory = Math.max(submission.result.maxMemory, submission.result.individual[i].memory)
 
         const userOutput = FileSystem.readFileSync(isolateFolder + 'output').toString()
         const answer = problem.testcase[i].output
@@ -115,7 +119,7 @@ const judge = async (submission) => {
 
 export const submissionListener = async () => {
     while (true) {
-        const timer = sleep(5000)
+        const timer = sleep(1000)
         const pendingSubmissions = await Submission.find({ status: 'pending' }).sort({ createdTime: -1 })
         const firstSubmission = pendingSubmissions[0]
         if (firstSubmission) {
