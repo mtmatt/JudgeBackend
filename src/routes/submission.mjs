@@ -39,7 +39,7 @@ submissionRouter.post('/api/submissions',
             newSubmission.createdTime = Date.now()
             newSubmission.status = 'pending'
             newSubmission.result = {
-                status: 'pending',
+                score: -1,
                 maxTime: -1,
                 maxMemory: -1,
                 individual: []

@@ -69,7 +69,7 @@ const moveFiles = async (submission, isolateFolder) => {
 const run = async (submission, isolateFolder) => {
     const problem = await Problem.findOne({ displayID: submission.problemID })
     let status = 'AC'
-    let point = 0
+    let score = 0
     for (let i = 0; i < problem.testcase.length; ++i) {
         FileSystem.writeFileSync(isolateFolder + 'input', problem.testcase[i].input)
         await moveFiles(submission, isolateFolder)
@@ -91,7 +91,7 @@ const run = async (submission, isolateFolder) => {
         const answer = problem.testcase[i].output
         if (userOutput.trim() === answer.trim()) {
             submission.result.individual[i].status = 'AC'
-            point += problem.testcase[i].point
+            score += problem.testcase[i].point
         }
         else {
             if (status === 'AC') status = 'WA' 
@@ -100,7 +100,7 @@ const run = async (submission, isolateFolder) => {
         await Submission.findByIdAndUpdate(submission.id, submission)
     }
     submission.status = status
-    submission.result.status = point
+    submission.result.score = score
     await Submission.findByIdAndUpdate(submission.id, submission)
 }
 

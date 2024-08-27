@@ -28,7 +28,7 @@ const submissionSchema = new mongoose.Schema({
         },
     ],
     result: {
-        status: mongoose.Schema.Types.String,
+        score: mongoose.Schema.Types.Number,
         maxTime: mongoose.Schema.Types.Number,
         maxMemory: mongoose.Schema.Types.Number,
         individual: [
