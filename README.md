@@ -1,5 +1,33 @@
 # JudgeBackend
 
+## Install
+
+Run following script as root
+
+```bash
+# mongodb
+apt install -y docker.io
+systemctl start docker
+docker pull arm64v8/mongo
+# node
+apt install nodejs
+apt install npm
+apt install git
+git clone https://github.com/mtmattqq/JudgeBackend.git
+cd JudgeBackend
+npm install
+```
+
+## Run
+
+```bash
+sudo docker run --name mongodb -d -p 27017:27017 arm64v8/mongo
+# if the container name is used
+sudo socker rm <container_id>
+# and run docker run again
+cd JudgeBackend
+sudo npm run start
+```
 ## Protocal
 
 Structure of different types of data.
