@@ -1,7 +1,11 @@
-import crypto, { hash, scryptSync } from 'crypto'
+import crypto, { scryptSync, randomBytes } from 'crypto'
 import FileSystem from 'fs'
 
-var salt = undefined // 
+export const randomString = (size) => {
+    return randomBytes(size).toString('hex')
+}
+
+var salt = undefined
 
 const readSalt = () => {
     try {
