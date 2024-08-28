@@ -15,6 +15,10 @@ export default {
         compileCommand: 'rustc main.rs -o main',
         executeCommand: './main',
     },
+    'pseudo': {
+        compileCommand: '',
+        executeCommand: '/usr/bin/pseudo main.ps'
+    }
     // 'nodejs': {
     //     compileCommand: '',
     //     executeCommand: 'node main.js',

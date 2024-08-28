@@ -29,10 +29,11 @@ const runSandbox = async (submission, testcase) => {
     try {
         const sandbox = await aexec(
             `isolate --run -E PATH=$PATH -i input -o output --mem=${memoryLimit} --time=${timeLimit} --meta=user-solutions/meta.out ` + 
-            '-- main')
+            '-- ' + languageSupport[submission.language].executeCommand)
     }
     catch (error) {
         console.log(error)
+        submission.result.individual[testcase] = {}
         submission.result.individual[testcase].status = 'RE'
         await Submission.findByIdAndUpdate(submission.id, submission)
         return false
@@ -59,6 +60,7 @@ const moveFiles = async (submission, isolateFolder) => {
                 'cp ./user-solutions/' + submission.userSolution[i].filename + 
                 ' ' + isolateFolder)
         }
+        return
     }
     // // This is for --cg mode
     // FileSystem.writeFileSync(isolateFolder + 'execute', '#!/bin bash\n' + executeCommand)
@@ -111,7 +113,7 @@ const judge = async (submission) => {
         return
     }
     const isolateFolder = init.stdout.substring(0, init.stdout.length - 1) + '/box/'
-    if (!await compile(submission)) {
+    if (languageSupport[submission.language].compileCommand != '' && !await compile(submission)) {
         return
     }
     await run(submission, isolateFolder)
