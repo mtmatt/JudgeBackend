@@ -28,7 +28,7 @@ const runSandbox = async (submission, testcase) => {
     const { timeLimit, memoryLimit } = await Problem.findOne({ displayID: submission.problemID })
     try {
         const sandbox = await aexec(
-            `isolate --run -E PATH=$PATH -i input -o output --mem=${memoryLimit} --time=${timeLimit} --meta=user-solutions/meta.out ` + 
+            `isolate --run -E PATH=$PATH -i input -o output --mem=${memoryLimit} --time=${timeLimit / 1000} --meta=user-solutions/meta.out ` + 
             '-- ' + languageSupport[submission.language].executeCommand)
     }
     catch (error) {
