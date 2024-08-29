@@ -5,6 +5,18 @@
 Run following script as root
 
 ```bash
+# ioi/isolate
+apt update
+apt install gcc
+apt install g++
+apt install make
+apt install git
+apt install libsystemd
+apt install libsystemd-dev
+apt install libcap-dev
+git clone https://github.com/ioi/isolate.git
+cd isolate
+make install isolate
 # mongodb
 apt install -y docker.io
 systemctl start docker
