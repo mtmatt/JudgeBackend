@@ -163,10 +163,10 @@ Structure of different types of data.
             "scorePolicy": "sum",
             "testcase": [
                 {
-                "input": "",
-                "output": "Hello World",
-                "point": 100,
-                "subtask": "0"
+                    "input": "",
+                    "output": "Hello World",
+                    "point": 100,
+                    "subtask": "0"
                 }
             ]
         }
@@ -200,8 +200,8 @@ Structure of different types of data.
             "language": "gcc c11",
             "userSolution": [
                 {
-                "filename": "main.c",
-                "content": "#include<stdio.h>\n\nint main(void) {\n    print(\"Hello World\");\n}"
+                    "filename": "main.c",
+                    "content": "#include<stdio.h>\n\nint main(void) {\n    print(\"Hello World\");\n}"
                 }  
             ]
         }
