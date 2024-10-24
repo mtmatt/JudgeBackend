@@ -5,23 +5,8 @@
 Run following script as root
 
 ```bash
-# ioi/isolate
-apt update
-apt install gcc
-apt install g++
-apt install make
-apt install git
-apt install libsystemd
-apt install libsystemd-dev
-apt install libcap-dev
-git clone https://github.com/ioi/isolate.git
-cd isolate
-make install isolate
-# mongodb
-apt install -y docker.io
-systemctl start docker
-docker pull arm64v8/mongo
-# node
+# install mongodb
+# install node
 apt install nodejs
 apt install npm
 apt install git
@@ -33,12 +18,9 @@ npm install
 ## Run
 
 ```bash
-sudo docker run --name mongodb -d -p 27017:27017 arm64v8/mongo
-# if the container name is used
-sudo socker rm <container_id>
-# and run docker run again
-cd JudgeBackend
-sudo npm run start
+# start mongodb
+# start judge backend
+npm run start
 ```
 ## Protocal
 
