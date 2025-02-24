@@ -1,5 +1,9 @@
 # JudgeBackend
 
+## Note
+
+Developement has moved to https://github.com/HyperSoWeak/OwoJudge
+
 ## Install
 
 Run following script as root
