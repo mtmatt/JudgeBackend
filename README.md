@@ -2,7 +2,7 @@
 
 ## Note
 
-Developement has moved to https://github.com/HyperSoWeak/OwoJudge
+Developement has moved to https://github.com/OwoJudge-Team/OwoJudge
 
 ## Install
 
